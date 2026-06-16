@@ -1,17 +1,17 @@
-# Zap
+# AICM
 
 > **Snip noisy command output before it hits your AI.**
 > 60–90% fewer tokens. Zero quality loss. Runs entirely on-device.
 
-Zap is a high-performance CLI proxy written in Rust. It sits between your AI
+AICM is a high-performance CLI proxy written in Rust. It sits between your AI
 coding assistant (Claude, Copilot, Cursor, Gemini, …) and the shell, then
 filters, groups, deduplicates, and truncates command output so the AI gets a
 compact summary instead of thousands of noisy lines.
 
 ```
-Without Zap                                    With Zap
+Without AICM                                    With AICM
 
-AI  --git status-->  shell  -->  git           AI  --git status-->  zap  -->  git
+AI  --git status-->  shell  -->  git           AI  --git status-->  AICM  -->  git
   ^                              |               ^                   |        |
   |  ~2,000 tokens (raw)         |               |   ~200 tokens     | filter |
   +------------------------------+               +-------(filtered)--+--------+
@@ -21,7 +21,7 @@ AI  --git status-->  shell  -->  git           AI  --git status-->  zap  -->  gi
 
 ## Token Savings (real-world session)
 
-| Operation              | Frequency | Raw    | Zap    | Savings |
+| Operation              | Frequency | Raw    | AICM    | Savings |
 | ---------------------- | --------- | ------ | ------ | ------- |
 | `ls` / `tree`          | 10×       | 2,000  | 400    | -80%    |
 | `cat` / `read`         | 20×       | 40,000 | 12,000 | -70%    |
@@ -42,7 +42,7 @@ AI  --git status-->  shell  -->  git           AI  --git status-->  zap  -->  gi
 
 ### Prerequisites
 
-> **⚠️ Rust toolchain is required.** Zap is a Rust binary you build from source.
+> **⚠️ Rust toolchain is required.** AICM is a Rust binary you build from source.
 > If you don't already have Rust installed, install it first (takes ~2 minutes):
 
 ```bash
@@ -63,15 +63,15 @@ Already have Rust? Make sure it's reasonably current:
 rustup update stable
 ```
 
-### Build & install Zap
+### Build & install AICM
 
 ```bash
-git clone https://github.com/bitan-del/zap.git
-cd zap
+git clone https://github.com/bitan-del/AICM.git
+cd AICM
 cargo install --path .
 ```
 
-This compiles Zap in release mode (~1–2 minutes first time) and puts the `zap` binary in `~/.cargo/bin/`. Make sure that's on your `PATH`:
+This compiles AICM in release mode (~1–2 minutes first time) and puts the `AICM` binary in `~/.cargo/bin/`. Make sure that's on your `PATH`:
 
 ```bash
 echo 'export PATH="$HOME/.cargo/bin:$PATH"' >> ~/.zshrc   # or ~/.bashrc
@@ -81,9 +81,9 @@ source ~/.zshrc
 ### Verify
 
 ```bash
-zap --version       # → zap 0.1.0
-zap --help
-zap git status      # inside any git repo
+AICM --version       # → AICM 0.1.0
+AICM --help
+AICM git status      # inside any git repo
 ```
 
 ### Troubleshooting
@@ -91,7 +91,7 @@ zap git status      # inside any git repo
 | Problem | Fix |
 |---------|-----|
 | `command not found: cargo` | Run `source "$HOME/.cargo/env"` or restart your terminal |
-| `command not found: zap` after install | `export PATH="$HOME/.cargo/bin:$PATH"` |
+| `command not found: AICM` after install | `export PATH="$HOME/.cargo/bin:$PATH"` |
 | `cargo install` fails with compiler errors | `rustup update stable` to update Rust |
 | Build is slow first time | Normal (~2 min). Subsequent builds are seconds. |
 
@@ -101,47 +101,47 @@ zap git status      # inside any git repo
 
 ```bash
 # Files
-zap ls .
-zap read src/main.rs
-zap grep "pattern" .
-zap find "*.rs" .
+AICM ls .
+AICM read src/main.rs
+AICM grep "pattern" .
+AICM find "*.rs" .
 
 # Git
-zap git status
-zap git log -n 10
-zap git diff
-zap git push           # → "ok main"
+AICM git status
+AICM git log -n 10
+AICM git diff
+AICM git push           # → "ok main"
 
 # Tests
-zap cargo test
-zap pytest
-zap go test
-zap jest / zap vitest
+AICM cargo test
+AICM pytest
+AICM go test
+AICM jest / AICM vitest
 
 # Build & lint
-zap cargo build
-zap cargo clippy
-zap lint               # ESLint, grouped by rule
-zap tsc                # TypeScript errors, grouped by file
-zap ruff check
-zap golangci-lint run
+AICM cargo build
+AICM cargo clippy
+AICM lint               # ESLint, grouped by rule
+AICM tsc                # TypeScript errors, grouped by file
+AICM ruff check
+AICM golangci-lint run
 
 # Cloud
-zap docker ps
-zap kubectl pods
-zap aws ec2 describe-instances
+AICM docker ps
+AICM kubectl pods
+AICM aws ec2 describe-instances
 
 # Analytics (see "Check Your Savings" section below for full reference)
-zap gain               # See token savings stats
-zap gain --graph       # ASCII graph (last 30 days)
-zap gain --history     # Recent command history
+AICM gain               # See token savings stats
+AICM gain --graph       # ASCII graph (last 30 days)
+AICM gain --history     # Recent command history
 ```
 
 ---
 
 ## How It Works
 
-Zap applies **12 filtering strategies** depending on the command:
+AICM applies **12 filtering strategies** depending on the command:
 
 | # | Strategy            | Example                                              | Reduction |
 | - | ------------------- | ---------------------------------------------------- | --------- |
@@ -163,34 +163,34 @@ Zap applies **12 filtering strategies** depending on the command:
 ## Hook Integration (Claude Code)
 
 For zero-friction usage, install the hook so every `git status` is auto-rewritten
-to `zap git status` before execution:
+to `AICM git status` before execution:
 
 ```bash
-zap init -g           # Install global hook for Claude Code
+AICM init -g           # Install global hook for Claude Code
 ```
 
 Then restart Claude Code. After that, the AI's normal shell commands get
-filtered transparently — no need to type `zap` yourself.
+filtered transparently — no need to type `AICM` yourself.
 
 Hooks are also available for Cursor, Gemini CLI, Copilot, Windsurf, Cline, and
-more. Run `zap init --help` for the full list.
+more. Run `AICM init --help` for the full list.
 
 ---
 
 ## Check Your Savings
 
-Every command Zap filters is logged to a local SQLite database. Four ways to inspect it:
+Every command AICM filters is logged to a local SQLite database. Four ways to inspect it:
 
 ### 1. Quick summary
 
 ```bash
-zap gain
+AICM gain
 ```
 
 Sample output:
 
 ```
-Zap Token Savings (Global Scope)
+AICM Token Savings (Global Scope)
 ════════════════════════════════════════════════════════════
 
 Total commands:    127
@@ -206,14 +206,14 @@ Efficiency meter: ████████████████████�
 See which commands got filtered and how much they each saved:
 
 ```bash
-zap gain --history
+AICM gain --history
 ```
 
 ```
-05-25 14:22 ▲ zap git log -n 10         -82% (412)
-05-25 14:21 ▲ zap cargo test            -94% (1,830)
-05-25 14:20 ▲ zap git status            -75% (76)
-05-25 14:18 ■ zap ls -la .              -89% (57)
+05-25 14:22 ▲ AICM git log -n 10         -82% (412)
+05-25 14:21 ▲ AICM cargo test            -94% (1,830)
+05-25 14:20 ▲ AICM git status            -75% (76)
+05-25 14:18 ■ AICM ls -la .              -89% (57)
 ```
 
 Symbols: `▲` high savings · `■` medium · `•` low / passthrough.
@@ -221,29 +221,29 @@ Symbols: `▲` high savings · `■` medium · `•` low / passthrough.
 ### 3. 30-day ASCII graph
 
 ```bash
-zap gain --graph
+AICM gain --graph
 ```
 
 Visual bar chart of daily savings — satisfying to watch grow over time.
 
 ### 4. Per-project scope
 
-By default `zap gain` shows global savings. To see only the project you're in:
+By default `AICM gain` shows global savings. To see only the project you're in:
 
 ```bash
 cd /path/to/your-project
-zap gain --scope project
+AICM gain --scope project
 ```
 
 ### More flags
 
 ```bash
-zap gain --daily              # Day-by-day breakdown
-zap gain --weekly             # Week-by-week
-zap gain --top 10             # Top 10 most-used commands
-zap gain --since 7            # Last 7 days only
-zap gain --format json        # Machine-readable (for dashboards)
-zap gain --all                # All-time stats
+AICM gain --daily              # Day-by-day breakdown
+AICM gain --weekly             # Week-by-week
+AICM gain --top 10             # Top 10 most-used commands
+AICM gain --since 7            # Last 7 days only
+AICM gain --format json        # Machine-readable (for dashboards)
+AICM gain --all                # All-time stats
 ```
 
 ### Watch savings live
@@ -251,12 +251,12 @@ zap gain --all                # All-time stats
 Open a terminal next to your AI assistant and run:
 
 ```bash
-watch -n 2 'zap gain | head -8'
+watch -n 2 'AICM gain | head -8'
 ```
 
 The numbers tick up every time your AI runs a shell command.
 
-> **Heads up:** If `zap gain` shows `Total commands: 0` even though you've been using Zap, the hook may not be loaded. Run `zap init --show` to verify the hook is registered, then restart your AI tool. See [Troubleshooting](#troubleshooting) above.
+> **Heads up:** If `AICM gain` shows `Total commands: 0` even though you've been using AICM, the hook may not be loaded. Run `AICM init --show` to verify the hook is registered, then restart your AI tool. See [Troubleshooting](#troubleshooting) above.
 
 ---
 
@@ -271,7 +271,7 @@ The numbers tick up every time your AI runs a shell command.
 
 ## Configuration
 
-Config lives at `~/.config/zap/config.toml` (or `~/Library/Application Support/zap/config.toml` on macOS).
+Config lives at `~/.config/AICM/config.toml` (or `~/Library/Application Support/AICM/config.toml` on macOS).
 
 ```toml
 [hooks]
@@ -282,7 +282,7 @@ enabled = true        # save raw output on failure (default: true)
 mode = "failures"     # "failures", "always", or "never"
 ```
 
-When a command fails, Zap saves the full unfiltered output to a `tee` file
+When a command fails, AICM saves the full unfiltered output to a `tee` file
 so the AI can read it without re-executing the command.
 
 ---
@@ -302,8 +302,8 @@ so the AI can read it without re-executing the command.
 - `src/cmds/` — 42 command filter modules (git, cargo, npm, pytest, docker, …)
 - `src/core/` — Shared infra (utils, tracking, tee, config, TOML filter engine)
 - `src/filters/` — 60+ declarative TOML filter recipes
-- `src/hooks/` — Hook installer (`zap init`) for 10+ AI tools
-- `src/analytics/` — Token savings reporting (`zap gain`)
+- `src/hooks/` — Hook installer (`AICM init`) for 10+ AI tools
+- `src/analytics/` — Token savings reporting (`AICM gain`)
 
 ---
 
